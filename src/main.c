@@ -1,25 +1,13 @@
 //#define CLOCK_FREQ 12000000UL
-#include <inttypes.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include "hal.h"
+
 
 #define USARTDIV 48000000/115200
 const int GPIO_BANK_NUMBER = 5;
 const int CLOCK_FREQ = 48000000;
 
-
-
-//These describe different registers in the MCU which allow you to enable different peripherals
-//They allow clock management and allow you to reset parts of the circuit
-const int RCC_BASE = 0x40021000;
-
-
-//They allow clock management and allow you to reset parts of the circuit
-//By configuring registers in the MCU you can enable GPIO banks
-//To save power in STM32 all peripherals are turned off but not the case in most other MCUs
-//This gives a clock source to components    
-uint32_t* RCC_IOPENR = (uint32_t*)(RCC_BASE + 0x34) ;
-uint32_t* RCC_APBENR1 = (uint32_t*)(RCC_BASE + 0x3C) ;
 
 //Only uart1 and uart2 have RX and TX ports mapped to GPIO pins on stm32c031c6 
 UART* const uart1 = (UART*)0x40013800;
@@ -71,25 +59,86 @@ void writeToSerialMonitor(char* msg){
             */
             delay(1);
         };
+    }    
+}
+
+void print_reg_vals(uint32_t reg_vals){
+    writeToSerialMonitor("\n");
+    char msg[33];
+    msg[32] = '\0';
+    for(int i=31; i>=0; i--){
+        msg[31-i] = '0'+(char)(((reg_vals>>i) & (1)));
+    }
+    writeToSerialMonitor(msg);
+}
+
+
+
+
+void uint_to_str(uint16_t val, char *str) {
+    /*
+    This loops through each of the powers of 10 and repeatedly does subtraction if val is less than the power.
+    It then displays the string from this.
+    The length of the array passed in should be 1 more than the space that the number 
+    takes because you need space for \0. 
+    */
+
+    // Powers of 10 for up to a 16-bit unsigned integer
+    static const uint16_t powers[5] = {
+        10000U, 1000U, 100U, 10U, 1U
+    };
+    
+    int idx = 0;
+    bool leading_zero = true;
+
+    if (val == 0) {
+        str[0] = '0';
+        str[1] = '\0';
+        return;
+    }
+
+    for (int i = 0; i < 5; i++) {
+        uint16_t p = powers[i];
+        char count = '0';
+        
+        while (val >= p) {
+            val -= p;
+            count++;
+        }
+        
+        // Skip leading zeros
+        if (count != '0' || !leading_zero) {
+            leading_zero = false;
+            str[idx++] = count;
+        }
     }
     
+    str[idx] = '\0';
 }
 
 int main(void){
     systickInit(CLOCK_FREQ/1000);
-    *RCC_IOPENR |= 1;
+    *RCC_IOPENR |= 1;//GPIOA, enabling done here is more concise because in function you don't exactly know which bank to enable
     setModeGPIO('A', 10, GPIO_MODE_OUTPUT);
     initSerialMonitor();
+    writeToSerialMonitor("HELLO\n");
+    adc_setup('A', 0);
     writeToSerialMonitor("HELLO\n");
     
     static bool on = true;
     uint32_t prd = 2000;
     uint32_t lastTick = s_ticks;
+    uint32_t count = 0;
+
     while(1){
         if(timerExpire(&lastTick, prd, s_ticks)){
-            writeToSerialMonitor("HELLO\n");
+            char snum[16];
+            uint_to_str(analog_read(), snum);
+            writeToSerialMonitor(snum);
+            writeToSerialMonitor("\n");
             writeGPIO('A', 10, on);
             on = !on;
+            count++;
         }
         /*
         - you can do other stuff here -> benefit of doing this compared to delay 

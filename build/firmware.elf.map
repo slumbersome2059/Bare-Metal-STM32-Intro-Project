@@ -1,46 +1,40 @@
 Archive member included to satisfy reference by file (symbol)
 
 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
-                              /tmp/ccwaupya.o (memset)
+                              /tmp/cc9D3A1t.o (memset)
 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
-                              /tmp/ccwaupya.o (memcpy)
+                              /tmp/cc9D3A1t.o (memcpy)
 
 Discarded input sections
 
- .group         0x00000000        0xc /tmp/ccbF24if.o
- .group         0x00000000        0xc /tmp/ccbF24if.o
- .group         0x00000000        0xc /tmp/ccbF24if.o
- .group         0x00000000        0xc /tmp/ccbF24if.o
- .group         0x00000000        0xc /tmp/ccbF24if.o
- .group         0x00000000        0xc /tmp/ccbF24if.o
- .group         0x00000000        0xc /tmp/ccbF24if.o
- .group         0x00000000        0xc /tmp/ccbF24if.o
- .group         0x00000000        0xc /tmp/ccbF24if.o
- .group         0x00000000        0xc /tmp/ccbF24if.o
- .group         0x00000000        0xc /tmp/ccbF24if.o
- .group         0x00000000        0xc /tmp/ccbF24if.o
- .text          0x00000000        0x0 /tmp/ccbF24if.o
- .data          0x00000000        0x0 /tmp/ccbF24if.o
- .bss           0x00000000        0x0 /tmp/ccbF24if.o
+ .group         0x00000000        0xc /tmp/ccERrTWC.o
+ .group         0x00000000        0xc /tmp/ccERrTWC.o
+ .group         0x00000000        0xc /tmp/ccERrTWC.o
+ .group         0x00000000        0xc /tmp/ccERrTWC.o
+ .text          0x00000000        0x0 /tmp/ccERrTWC.o
+ .data          0x00000000        0x0 /tmp/ccERrTWC.o
+ .bss           0x00000000        0x0 /tmp/ccERrTWC.o
  .text.timerExpire
-                0x00000000       0x1e /tmp/ccbF24if.o
- .rodata.uart4  0x00000000        0x4 /tmp/ccbF24if.o
- .rodata.uart3  0x00000000        0x4 /tmp/ccbF24if.o
- .rodata.uart2  0x00000000        0x4 /tmp/ccbF24if.o
- .rodata.uart1  0x00000000        0x4 /tmp/ccbF24if.o
- .rodata.RCC_BASE
-                0x00000000        0x4 /tmp/ccbF24if.o
+                0x00000000       0x1e /tmp/ccERrTWC.o
+ .text.print_reg_vals
+                0x00000000       0x40 /tmp/ccERrTWC.o
+ .rodata.uart4  0x00000000        0x4 /tmp/ccERrTWC.o
+ .rodata.uart3  0x00000000        0x4 /tmp/ccERrTWC.o
+ .rodata.uart2  0x00000000        0x4 /tmp/ccERrTWC.o
+ .rodata.uart1  0x00000000        0x4 /tmp/ccERrTWC.o
  .rodata.CLOCK_FREQ
-                0x00000000        0x4 /tmp/ccbF24if.o
+                0x00000000        0x4 /tmp/ccERrTWC.o
  .rodata.GPIO_BANK_NUMBER
-                0x00000000        0x4 /tmp/ccbF24if.o
+                0x00000000        0x4 /tmp/ccERrTWC.o
+ .data.ADC1_SMPR
+                0x00000000        0x4 /tmp/ccERrTWC.o
  .rodata.SYS_TICKp
-                0x00000000        0x4 /tmp/ccbF24if.o
- .group         0x00000000        0xc /tmp/ccwaupya.o
- .text          0x00000000        0x0 /tmp/ccwaupya.o
- .data          0x00000000        0x0 /tmp/ccwaupya.o
- .bss           0x00000000        0x0 /tmp/ccwaupya.o
- .debug_macro   0x00000000      0xaa2 /tmp/ccwaupya.o
+                0x00000000        0x4 /tmp/ccERrTWC.o
+ .group         0x00000000        0xc /tmp/cc9D3A1t.o
+ .text          0x00000000        0x0 /tmp/cc9D3A1t.o
+ .data          0x00000000        0x0 /tmp/cc9D3A1t.o
+ .bss           0x00000000        0x0 /tmp/cc9D3A1t.o
+ .debug_macro   0x00000000      0xaa2 /tmp/cc9D3A1t.o
  .data          0x00000000        0x0 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
  .bss           0x00000000        0x0 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
  .data          0x00000000        0x0 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
@@ -55,8 +49,8 @@ sram             0x20000000         0x00003000         xrw
 
 Linker script and memory map
 
-LOAD /tmp/ccbF24if.o
-LOAD /tmp/ccwaupya.o
+LOAD /tmp/ccERrTWC.o
+LOAD /tmp/cc9D3A1t.o
 LOAD /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a
 LOAD /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/nofp/libgcc.a
                 0x20003000                        _estack = (ORIGIN (sram) + LENGTH (sram))
@@ -64,182 +58,211 @@ LOAD /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/nofp/libgcc.a
 .vectors        0x08000000       0xbc
                 0x08000000                        . = ALIGN (0x4)
  *(.vectors)
- .vectors       0x08000000       0xbc /tmp/ccwaupya.o
+ .vectors       0x08000000       0xbc /tmp/cc9D3A1t.o
                 0x08000000                tab
                 0x080000bc                        . = ALIGN (0x4)
 
-.text           0x080000bc      0x320
+.text           0x080000bc      0x4b4
                 0x080000bc                        . = ALIGN (0x4)
  *(.text*)
- .text.setReg   0x080000bc       0x2c /tmp/ccbF24if.o
+ .text.setReg   0x080000bc       0x2c /tmp/ccERrTWC.o
  .text.systickInit
-                0x080000e8       0x28 /tmp/ccbF24if.o
+                0x080000e8       0x28 /tmp/ccERrTWC.o
                 0x080000e8                systickInit
+ .text.adc_setup
+                0x08000110       0xd8 /tmp/ccERrTWC.o
+                0x08000110                adc_setup
+ .text.analog_read
+                0x080001e8       0x44 /tmp/ccERrTWC.o
+                0x080001e8                analog_read
  .text.systickHandler
-                0x08000110       0x10 /tmp/ccbF24if.o
-                0x08000110                systickHandler
- .text.delay    0x08000120        0xc /tmp/ccbF24if.o
-                0x08000120                delay
+                0x0800022c       0x10 /tmp/ccERrTWC.o
+                0x0800022c                systickHandler
+ .text.delay    0x0800023c        0xc /tmp/ccERrTWC.o
+                0x0800023c                delay
  .text.initSerialMonitor
-                0x0800012c       0x6c /tmp/ccbF24if.o
-                0x0800012c                initSerialMonitor
+                0x08000248       0x6c /tmp/ccERrTWC.o
+                0x08000248                initSerialMonitor
  .text.writeToSerialMonitor
-                0x08000198       0x2c /tmp/ccbF24if.o
-                0x08000198                writeToSerialMonitor
+                0x080002b4       0x2c /tmp/ccERrTWC.o
+                0x080002b4                writeToSerialMonitor
+ .text.uint_to_str
+                0x080002e0       0x54 /tmp/ccERrTWC.o
+                0x080002e0                uint_to_str
  .text.startup.main
-                0x080001c4       0x80 /tmp/ccbF24if.o
-                0x080001c4                main
- .text._reset   0x08000244       0x58 /tmp/ccwaupya.o
-                0x08000244                _reset
- .text          0x0800029c       0xb0 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
-                0x0800029c                memset
- .text          0x0800034c       0x90 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
-                0x0800034c                memcpy
-                0x080003dc                        . = ALIGN (0x4)
+                0x08000334       0xa4 /tmp/ccERrTWC.o
+                0x08000334                main
+ .text._reset   0x080003d8       0x58 /tmp/cc9D3A1t.o
+                0x080003d8                _reset
+ .text          0x08000430       0xb0 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
+                0x08000430                memset
+ .text          0x080004e0       0x90 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
+                0x080004e0                memcpy
+                0x08000570                        . = ALIGN (0x4)
 
-.glue_7         0x080003dc        0x0
- .glue_7        0x080003dc        0x0 linker stubs
+.glue_7         0x08000570        0x0
+ .glue_7        0x08000570        0x0 linker stubs
 
-.glue_7t        0x080003dc        0x0
- .glue_7t       0x080003dc        0x0 linker stubs
+.glue_7t        0x08000570        0x0
+ .glue_7t       0x08000570        0x0 linker stubs
 
-.vfp11_veneer   0x080003dc        0x0
- .vfp11_veneer  0x080003dc        0x0 linker stubs
+.vfp11_veneer   0x08000570        0x0
+ .vfp11_veneer  0x08000570        0x0 linker stubs
 
-.v4_bx          0x080003dc        0x0
- .v4_bx         0x080003dc        0x0 linker stubs
+.v4_bx          0x08000570        0x0
+ .v4_bx         0x08000570        0x0 linker stubs
 
-.iplt           0x080003dc        0x0
- .iplt          0x080003dc        0x0 /tmp/ccbF24if.o
+.iplt           0x08000570        0x0
+ .iplt          0x08000570        0x0 /tmp/ccERrTWC.o
 
-.rodata         0x080003dc        0x8
-                0x080003dc                        . = ALIGN (0x4)
+.rodata         0x08000570       0x14
+                0x08000570                        . = ALIGN (0x4)
  *(.rodata*)
+ .rodata.print_reg_vals.str1.1
+                0x08000570        0x7 /tmp/ccERrTWC.o
+                                  0x2 (size before relaxing)
  .rodata.main.str1.1
-                0x080003dc        0x7 /tmp/ccbF24if.o
-                0x080003e4                        . = ALIGN (0x4)
- *fill*         0x080003e3        0x1 
+                0x08000577        0x7 /tmp/ccERrTWC.o
+ *fill*         0x08000577        0x1 
+ .rodata.powers.1
+                0x08000578        0xa /tmp/ccERrTWC.o
+                0x08000584                        . = ALIGN (0x4)
+ *fill*         0x08000582        0x2 
 
-.rel.dyn        0x080003e4        0x0
- .rel.iplt      0x080003e4        0x0 /tmp/ccbF24if.o
+.rel.dyn        0x08000584        0x0
+ .rel.iplt      0x08000584        0x0 /tmp/ccERrTWC.o
 
-.data           0x20000000        0xc load address 0x080003e4
+.data           0x20000000       0x2c load address 0x08000584
                 0x20000000                        . = ALIGN (0x4)
                 0x20000000                        _startDataRAM = .
  *(.firstData)
  *(.data SORT_BY_NAME(.data.*))
+ .data.ADC1_CALFACT
+                0x20000000        0x4 /tmp/ccERrTWC.o
+                0x20000000                ADC1_CALFACT
+ .data.ADC1_CCR
+                0x20000004        0x4 /tmp/ccERrTWC.o
+                0x20000004                ADC1_CCR
+ .data.ADC1_CFGR1
+                0x20000008        0x4 /tmp/ccERrTWC.o
+                0x20000008                ADC1_CFGR1
+ .data.ADC1_CHSELR
+                0x2000000c        0x4 /tmp/ccERrTWC.o
+                0x2000000c                ADC1_CHSELR
+ .data.ADC1_CR  0x20000010        0x4 /tmp/ccERrTWC.o
+                0x20000010                ADC1_CR
+ .data.ADC1_DR  0x20000014        0x4 /tmp/ccERrTWC.o
+                0x20000014                ADC1_DR
+ .data.ADC1_ISR
+                0x20000018        0x4 /tmp/ccERrTWC.o
+                0x20000018                ADC1_ISR
  .data.RCC_APBENR1
-                0x20000000        0x4 /tmp/ccbF24if.o
-                0x20000000                RCC_APBENR1
+                0x2000001c        0x4 /tmp/ccERrTWC.o
+                0x2000001c                RCC_APBENR1
+ .data.RCC_APBENR2
+                0x20000020        0x4 /tmp/ccERrTWC.o
+                0x20000020                RCC_APBENR2
  .data.RCC_IOPENR
-                0x20000004        0x4 /tmp/ccbF24if.o
-                0x20000004                RCC_IOPENR
- .data.on.0     0x20000008        0x1 /tmp/ccbF24if.o
-                0x2000000c                        . = ALIGN (0x4)
- *fill*         0x20000009        0x3 
-                0x2000000c                        _endDataRAM = .
-                0x080003e4                        _startDataFLASH = LOADADDR (.data)
+                0x20000024        0x4 /tmp/ccERrTWC.o
+                0x20000024                RCC_IOPENR
+ .data.on.0     0x20000028        0x1 /tmp/ccERrTWC.o
+                0x2000002c                        . = ALIGN (0x4)
+ *fill*         0x20000029        0x3 
+                0x2000002c                        _endDataRAM = .
+                0x08000584                        _startDataFLASH = LOADADDR (.data)
 
-.igot.plt       0x2000000c        0x0 load address 0x080003f0
- .igot.plt      0x2000000c        0x0 /tmp/ccbF24if.o
+.igot.plt       0x2000002c        0x0 load address 0x080005b0
+ .igot.plt      0x2000002c        0x0 /tmp/ccERrTWC.o
 
-.bss            0x2000000c        0x4 load address 0x080003f0
-                0x2000000c                        . = ALIGN (0x4)
-                0x2000000c                        _startBSS = .
+.bss            0x2000002c        0x4 load address 0x080005b0
+                0x2000002c                        . = ALIGN (0x4)
+                0x2000002c                        _startBSS = .
  *(.bss SORT_BY_NAME(.bss.*))
- .bss.s_ticks   0x2000000c        0x4 /tmp/ccbF24if.o
-                0x20000010                        . = ALIGN (0x4)
-                0x20000010                        _endBSS = .
+ .bss.s_ticks   0x2000002c        0x4 /tmp/ccERrTWC.o
+                0x20000030                        . = ALIGN (0x4)
+                0x20000030                        _endBSS = .
 OUTPUT(build/firmware.elf elf32-littlearm)
 LOAD linker stubs
 
-.debug_info     0x00000000      0xd13
- .debug_info    0x00000000      0x957 /tmp/ccbF24if.o
- .debug_info    0x00000957      0x135 /tmp/ccwaupya.o
- .debug_info    0x00000a8c      0x135 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
- .debug_info    0x00000bc1      0x152 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
+.debug_info     0x00000000     0x120f
+ .debug_info    0x00000000      0xe53 /tmp/ccERrTWC.o
+ .debug_info    0x00000e53      0x135 /tmp/cc9D3A1t.o
+ .debug_info    0x00000f88      0x135 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
+ .debug_info    0x000010bd      0x152 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
 
-.debug_abbrev   0x00000000      0x568
- .debug_abbrev  0x00000000      0x2ee /tmp/ccbF24if.o
- .debug_abbrev  0x000002ee       0xf9 /tmp/ccwaupya.o
- .debug_abbrev  0x000003e7       0xb7 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
- .debug_abbrev  0x0000049e       0xca /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
+.debug_abbrev   0x00000000      0x641
+ .debug_abbrev  0x00000000      0x3c7 /tmp/ccERrTWC.o
+ .debug_abbrev  0x000003c7       0xf9 /tmp/cc9D3A1t.o
+ .debug_abbrev  0x000004c0       0xb7 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
+ .debug_abbrev  0x00000577       0xca /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
 
 .debug_loclists
-                0x00000000      0x798
+                0x00000000      0x9c7
  .debug_loclists
-                0x00000000      0x30b /tmp/ccbF24if.o
+                0x00000000      0x53a /tmp/ccERrTWC.o
  .debug_loclists
-                0x0000030b      0x1c6 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
+                0x0000053a      0x1c6 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
  .debug_loclists
-                0x000004d1      0x2c7 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
+                0x00000700      0x2c7 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
 
-.debug_aranges  0x00000000       0xb8
+.debug_aranges  0x00000000       0xd8
  .debug_aranges
-                0x00000000       0x58 /tmp/ccbF24if.o
+                0x00000000       0x78 /tmp/ccERrTWC.o
  .debug_aranges
-                0x00000058       0x20 /tmp/ccwaupya.o
+                0x00000078       0x20 /tmp/cc9D3A1t.o
  .debug_aranges
-                0x00000078       0x20 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
+                0x00000098       0x20 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
  .debug_aranges
-                0x00000098       0x20 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
+                0x000000b8       0x20 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
 
 .debug_rnglists
-                0x00000000       0xba
+                0x00000000      0x11d
  .debug_rnglists
-                0x00000000       0x9b /tmp/ccbF24if.o
+                0x00000000       0xfe /tmp/ccERrTWC.o
  .debug_rnglists
-                0x0000009b       0x1f /tmp/ccwaupya.o
+                0x000000fe       0x1f /tmp/cc9D3A1t.o
 
-.debug_macro    0x00000000     0x1573
- .debug_macro   0x00000000       0xa0 /tmp/ccbF24if.o
- .debug_macro   0x000000a0      0xaa2 /tmp/ccbF24if.o
- .debug_macro   0x00000b42       0x22 /tmp/ccbF24if.o
- .debug_macro   0x00000b64       0x54 /tmp/ccbF24if.o
- .debug_macro   0x00000bb8       0x24 /tmp/ccbF24if.o
- .debug_macro   0x00000bdc       0x94 /tmp/ccbF24if.o
- .debug_macro   0x00000c70       0x43 /tmp/ccbF24if.o
- .debug_macro   0x00000cb3      0x103 /tmp/ccbF24if.o
- .debug_macro   0x00000db6       0x3a /tmp/ccbF24if.o
- .debug_macro   0x00000df0      0x34e /tmp/ccbF24if.o
- .debug_macro   0x0000113e       0x89 /tmp/ccbF24if.o
- .debug_macro   0x000011c7      0x379 /tmp/ccbF24if.o
- .debug_macro   0x00001540       0x22 /tmp/ccbF24if.o
- .debug_macro   0x00001562       0x11 /tmp/ccwaupya.o
+.debug_macro    0x00000000      0xe65
+ .debug_macro   0x00000000       0x32 /tmp/ccERrTWC.o
+ .debug_macro   0x00000032      0xaa2 /tmp/ccERrTWC.o
+ .debug_macro   0x00000ad4      0x34e /tmp/ccERrTWC.o
+ .debug_macro   0x00000e22       0x22 /tmp/ccERrTWC.o
+ .debug_macro   0x00000e44       0x10 /tmp/ccERrTWC.o
+ .debug_macro   0x00000e54       0x11 /tmp/cc9D3A1t.o
 
-.debug_line     0x00000000      0x8a5
- .debug_line    0x00000000      0x49b /tmp/ccbF24if.o
- .debug_line    0x0000049b       0x6c /tmp/ccwaupya.o
- .debug_line    0x00000507      0x1bd /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
- .debug_line    0x000006c4      0x1e1 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
+.debug_line     0x00000000      0xb1e
+ .debug_line    0x00000000      0x714 /tmp/ccERrTWC.o
+ .debug_line    0x00000714       0x6c /tmp/cc9D3A1t.o
+ .debug_line    0x00000780      0x1bd /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
+ .debug_line    0x0000093d      0x1e1 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
 
-.debug_str      0x00000000     0x4f8d
- .debug_str     0x00000000     0x4f8d /tmp/ccbF24if.o
-                               0x4f57 (size before relaxing)
- .debug_str     0x00004f8d     0x2de0 /tmp/ccwaupya.o
- .debug_str     0x00004f8d      0x1ab /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
- .debug_str     0x00004f8d      0x1c8 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
+.debug_str      0x00000000     0x3bd8
+ .debug_str     0x00000000     0x3bd8 /tmp/ccERrTWC.o
+                               0x3b68 (size before relaxing)
+ .debug_str     0x00003bd8     0x2dee /tmp/cc9D3A1t.o
+ .debug_str     0x00003bd8      0x1ab /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
+ .debug_str     0x00003bd8      0x1c8 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
 
 .comment        0x00000000       0x26
- .comment       0x00000000       0x26 /tmp/ccbF24if.o
+ .comment       0x00000000       0x26 /tmp/ccERrTWC.o
                                  0x27 (size before relaxing)
- .comment       0x00000026       0x27 /tmp/ccwaupya.o
+ .comment       0x00000026       0x27 /tmp/cc9D3A1t.o
  .comment       0x00000026       0x27 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
  .comment       0x00000026       0x27 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
 
 .ARM.attributes
                 0x00000000       0x2a
  .ARM.attributes
-                0x00000000       0x2a /tmp/ccbF24if.o
+                0x00000000       0x2a /tmp/ccERrTWC.o
  .ARM.attributes
-                0x0000002a       0x2a /tmp/ccwaupya.o
+                0x0000002a       0x2a /tmp/cc9D3A1t.o
  .ARM.attributes
                 0x00000054       0x2a /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
  .ARM.attributes
                 0x0000007e       0x2a /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
 
-.debug_frame    0x00000000      0x154
- .debug_frame   0x00000000       0xcc /tmp/ccbF24if.o
- .debug_frame   0x000000cc       0x28 /tmp/ccwaupya.o
- .debug_frame   0x000000f4       0x30 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
- .debug_frame   0x00000124       0x30 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
+.debug_frame    0x00000000      0x1d0
+ .debug_frame   0x00000000      0x148 /tmp/ccERrTWC.o
+ .debug_frame   0x00000148       0x28 /tmp/cc9D3A1t.o
+ .debug_frame   0x00000170       0x30 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memset.o)
+ .debug_frame   0x000001a0       0x30 /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/lib/thumb/nofp/libc_nano.a(libc_a-memcpy-stub.o)
