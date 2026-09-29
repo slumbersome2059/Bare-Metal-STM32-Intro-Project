@@ -1,0 +1,216 @@
+ARM GAS  /tmp/ccyyGBIo.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 4
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"startup.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/startup.c"
+  18              		.section	.text._reset,"ax",%progbits
+  19              		.align	1
+  20              		.global	_reset
+  21              		.syntax unified
+  22              		.code	16
+  23              		.thumb_func
+  25              	_reset:
+  26              	.LFB0:
+   1:Core/Src/startup.c **** extern long _startDataRAM, _endDataRAM, _startDataFLASH, _startBSS, _endBSS;
+   2:Core/Src/startup.c **** 
+   3:Core/Src/startup.c **** /*
+   4:Core/Src/startup.c **** This code will take stuff in .data and .bss in flash memory and load it into RAM.
+   5:Core/Src/startup.c **** This is stuff that needs to be stored in non-volatile memory so that its durable so it will be in f
+   6:Core/Src/startup.c **** but to be used by MCU when chip is booted it needs to be in RAM.
+   7:Core/Src/startup.c **** */
+   8:Core/Src/startup.c **** extern int main(void);
+   9:Core/Src/startup.c **** __attribute__((noreturn)) void _reset(void){
+  27              		.loc 1 9 44 view -0
+  28              		.cfi_startproc
+  29              		@ Volatile: function does not return.
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  10:Core/Src/startup.c ****     /*
+  11:Core/Src/startup.c ****     naked 
+  12:Core/Src/startup.c ****     - means no function epilogue(restores stack for parent) and no function prologue(this is where 
+  13:Core/Src/startup.c ****     - you use this when you want to write function in assembly code(you can't use any local variabl
+  14:Core/Src/startup.c ****     - you would typically write the prologue and epilogue in assembly
+  15:Core/Src/startup.c ****     - The code in this function should be in assembly in a __asm__{code} statement
+  16:Core/Src/startup.c ****     - Sometimes C code will work but its unreliable and should never be trusted(we get lucky here)
+  17:Core/Src/startup.c ****     - Prologue also saves the current context like registers but as this function is 
+  18:Core/Src/startup.c ****     run at the start the registers will have dummy data so storing them in RAM is a waste of time
+  19:Core/Src/startup.c ****     - Epilogue also not necessary(an epilogue is generated even though no return) so naked
+  20:Core/Src/startup.c ****     can save space
+  21:Core/Src/startup.c ****     
+  22:Core/Src/startup.c ****     
+  23:Core/Src/startup.c ****     no_return
+  24:Core/Src/startup.c ****     - this code will never go back to caller(except when there are exceptions in code)
+  25:Core/Src/startup.c ****     difference to void is that function declared with void can go back to caller
+  26:Core/Src/startup.c ****     - mainly used for optimisations like cutting out code that is written after the function call(t
+  27:Core/Src/startup.c ****     */
+ARM GAS  /tmp/ccyyGBIo.s 			page 2
+
+
+  28:Core/Src/startup.c ****     long* src = &(_startDataFLASH);
+  32              		.loc 1 28 5 view .LVU1
+  33              	.LVL0:
+  29:Core/Src/startup.c ****     /*
+  30:Core/Src/startup.c ****     - Linker script variables add the variableName to the symbol table and the
+  31:Core/Src/startup.c ****     value that the variable is assigned to, is stored in an entry with the variableName 
+  32:Core/Src/startup.c ****     in the symbol table(so the value that the variableName is assigned to is its address not value)
+  33:Core/Src/startup.c ****     typically for declarations in C in symbol table you would store varName = memory address of val
+  34:Core/Src/startup.c ****     but with a linker script variable there is no memory assigned to the variable
+  35:Core/Src/startup.c ****     - This is why in source code you access &_startDataRAM and same for other linker 
+  36:Core/Src/startup.c ****     script variables because all you want is the address of the variable because the value of 
+  37:Core/Src/startup.c ****     linker script variable is stored where you would typically store an address of a typical variab
+  38:Core/Src/startup.c ****     - using the value of a variable in source code(so if you have
+  39:Core/Src/startup.c ****     int a = 5; int b = a + 2) will get address of a from symbol table and use the 
+  40:Core/Src/startup.c ****     address to get the value of a 
+  41:Core/Src/startup.c ****     - So plainly using _startDataRam will cause problems because there is no memory
+  42:Core/Src/startup.c ****     assigned to _startDataRam so you can't access a value like you typically would for 
+  43:Core/Src/startup.c ****     high level variables
+  44:Core/Src/startup.c ****     */
+  45:Core/Src/startup.c ****     for(long* dst = ((&_startDataRAM)); dst < &_endDataRAM; dst++){//addresses of _startDatRAM and 
+  34              		.loc 1 45 5 view .LVU2
+  35              	.LBB2:
+  36              		.loc 1 45 9 view .LVU3
+  46:Core/Src/startup.c ****         *dst = *src;
+  37              		.loc 1 46 14 is_stmt 0 view .LVU4
+  38 0000 0E4B     		ldr	r3, .L9
+  39 0002 0F49     		ldr	r1, .L9+4
+  40 0004 0022     		movs	r2, #0
+  41              	.LBE2:
+   9:Core/Src/startup.c ****     /*
+  42              		.loc 1 9 44 view .LVU5
+  43 0006 10B5     		push	{r4, lr}
+  44              		.cfi_def_cfa_offset 8
+  45              		.cfi_offset 4, -8
+  46              		.cfi_offset 14, -4
+  47              	.LBB3:
+  48              		.loc 1 46 14 view .LVU6
+  49 0008 0E48     		ldr	r0, .L9+8
+  50 000a 8B42     		cmp	r3, r1
+  51 000c 03D3     		bcc	.L3
+  52 000e 0333     		adds	r3, r3, #3
+  53 0010 1A1A     		subs	r2, r3, r0
+  54 0012 9208     		lsrs	r2, r2, #2
+  55 0014 9200     		lsls	r2, r2, #2
+  56              	.L3:
+  57 0016 0C49     		ldr	r1, .L9+12
+  58 0018 FFF7FEFF 		bl	memcpy
+  59              	.LVL1:
+  60              		.loc 1 46 14 view .LVU7
+  61              	.LBE3:
+  62              	.LBB4:
+  47:Core/Src/startup.c ****         src += 1;
+  48:Core/Src/startup.c ****     }
+  49:Core/Src/startup.c ****     for(long* dst = ((&_startBSS)); dst < &_endBSS; dst++){//addresses of _startDatRAM and endDataR
+  50:Core/Src/startup.c ****         *dst = 0;
+  63              		.loc 1 50 14 view .LVU8
+  64 001c 0B4B     		ldr	r3, .L9+16
+ARM GAS  /tmp/ccyyGBIo.s 			page 3
+
+
+  65 001e 0C49     		ldr	r1, .L9+20
+  66 0020 0022     		movs	r2, #0
+  67 0022 0C48     		ldr	r0, .L9+24
+  68 0024 8B42     		cmp	r3, r1
+  69 0026 03D3     		bcc	.L5
+  70 0028 0333     		adds	r3, r3, #3
+  71 002a 1A1A     		subs	r2, r3, r0
+  72 002c 9208     		lsrs	r2, r2, #2
+  73 002e 9200     		lsls	r2, r2, #2
+  74              	.L5:
+  75 0030 0021     		movs	r1, #0
+  76 0032 FFF7FEFF 		bl	memset
+  77              	.LVL2:
+  78              	.LBE4:
+  51:Core/Src/startup.c ****     }
+  52:Core/Src/startup.c ****     //reset does this moving because RAM is faster than flash to read from and write to
+  53:Core/Src/startup.c ****     main();
+  79              		.loc 1 53 5 is_stmt 1 view .LVU9
+  80 0036 FFF7FEFF 		bl	main
+  81              	.LVL3:
+  82              	.L6:
+  54:Core/Src/startup.c ****     for(;;);//infinite loop
+  83              		.loc 1 54 5 view .LVU10
+  84              		.loc 1 54 5 view .LVU11
+  85 003a FEE7     		b	.L6
+  86              	.L10:
+  87              		.align	2
+  88              	.L9:
+  89 003c 00000000 		.word	_endDataRAM
+  90 0040 FDFFFFFF 		.word	_startDataRAM-3
+  91 0044 00000000 		.word	_startDataRAM
+  92 0048 00000000 		.word	_startDataFLASH
+  93 004c 00000000 		.word	_endBSS
+  94 0050 FDFFFFFF 		.word	_startBSS-3
+  95 0054 00000000 		.word	_startBSS
+  96              		.cfi_endproc
+  97              	.LFE0:
+  99              		.global	tab
+ 100              		.section	.vectors,"a"
+ 101              		.align	2
+ 104              	tab:
+ 105 0000 00000000 		.word	_estack
+ 106 0004 00000000 		.word	_reset
+ 107 0008 00000000 		.word	0
+ 108 000c 00000000 		.word	0
+ 109 0010 00000000 		.word	0
+ 110 0014 00000000 		.word	0
+ 111 0018 00000000 		.word	0
+ 112 001c 00000000 		.word	0
+ 113 0020 00000000 		.word	vPortSVCHandler
+ 114 0024 00000000 		.word	0
+ 115 0028 00000000 		.word	0
+ 116 002c 00000000 		.word	xPortPendSVHandler
+ 117 0030 00000000 		.word	0
+ 118 0034 00000000 		.word	0
+ 119 0038 00000000 		.word	0
+ 120 003c 00000000 		.word	xPortSysTickHandler
+ARM GAS  /tmp/ccyyGBIo.s 			page 4
+
+
+ 121 0040 00000000 		.space	128
+ 121      00000000 
+ 121      00000000 
+ 121      00000000 
+ 121      00000000 
+ 122              		.text
+ 123              	.Letext0:
+ 124              		.file 2 "<built-in>"
+ARM GAS  /tmp/ccyyGBIo.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 startup.c
+     /tmp/ccyyGBIo.s:19     .text._reset:00000000 $t
+     /tmp/ccyyGBIo.s:25     .text._reset:00000000 _reset
+     /tmp/ccyyGBIo.s:89     .text._reset:0000003c $d
+     /tmp/ccyyGBIo.s:104    .vectors:00000000 tab
+     /tmp/ccyyGBIo.s:101    .vectors:00000000 $d
+                           .group:00000000 wm4.0.1a22b6a18e233ac4483d4e03a6014323
+
+UNDEFINED SYMBOLS
+memcpy
+memset
+main
+_endDataRAM
+_startDataRAM
+_startDataFLASH
+_endBSS
+_startBSS
+_estack
+vPortSVCHandler
+xPortPendSVHandler
+xPortSysTickHandler

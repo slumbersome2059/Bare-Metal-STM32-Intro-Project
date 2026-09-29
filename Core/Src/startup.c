@@ -5,7 +5,7 @@ This code will take stuff in .data and .bss in flash memory and load it into RAM
 This is stuff that needs to be stored in non-volatile memory so that its durable so it will be in flash
 but to be used by MCU when chip is booted it needs to be in RAM.
 */
-extern void main(void);
+extern int main(void);
 __attribute__((noreturn)) void _reset(void){
     /*
     naked 
@@ -49,6 +49,7 @@ __attribute__((noreturn)) void _reset(void){
     for(long* dst = ((&_startBSS)); dst < &_endBSS; dst++){//addresses of _startDatRAM and endDataRAM are not what you want to copy into they are like goalposts
         *dst = 0;
     }
+    //reset does this moving because RAM is faster than flash to read from and write to
     main();
     for(;;);//infinite loop
 
@@ -56,8 +57,11 @@ __attribute__((noreturn)) void _reset(void){
 
 extern void _estack(void);
 extern void systickHandler(void);
+extern void vPortSVCHandler( void );
+extern void xPortPendSVHandler( void );
+extern void xPortSysTickHandler( void );
 
-__attribute__((used, section(".vectors"))) void (* const tab[16+31])(void) = {_estack, _reset, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, systickHandler};
+__attribute__((used, section(".vectors"))) void (* const tab[16+32])(void) = {_estack, _reset, 0, 0, 0, 0, 0, 0, vPortSVCHandler, 0, 0, xPortPendSVHandler, 0, 0, 0, xPortSysTickHandler};
 //only first two handlers defined rest are zeroed
 //Every handler is a handler for a hardware interrupt, apart from the first two -> second one is the code which starts bootup and first is the initial stack pointer
 //So this table is also read at the start for bootup

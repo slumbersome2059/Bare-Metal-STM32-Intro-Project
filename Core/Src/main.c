@@ -2,7 +2,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "hal.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
+/* System clock frequency used by the FreeRTOS port. */
+uint32_t SystemCoreClock = 48000000UL;
 
 #define USARTDIV 48000000/115200
 const int GPIO_BANK_NUMBER = 5;
@@ -72,8 +76,22 @@ void print_reg_vals(uint32_t reg_vals){
     writeToSerialMonitor(msg);
 }
 
+/* 
+Hook prototypes 
+- Not used now so not implemented
+*/
+void configureTimerForRunTimeStats(void);
+unsigned long getRunTimeCounterValue(void);
 
+void configureTimerForRunTimeStats(void)
+{
 
+}
+
+unsigned long getRunTimeCounterValue(void)
+{
+    return 0;
+}
 
 void uint_to_str(uint16_t val, char *str) {
     /*
@@ -115,8 +133,53 @@ void uint_to_str(uint16_t val, char *str) {
     
     str[idx] = '\0';
 }
+void systemInit(void){
+    systickInit(CLOCK_FREQ/1000);
+    *RCC_IOPENR |= 1;//GPIOA, enabling done here is more concise because in function you don't exactly know which bank to enable
+    setModeGPIO('A', 10, GPIO_MODE_OUTPUT);
+    initSerialMonitor();
+    writeToSerialMonitor("HELLO\n");
+    adc_setup('A', 0);
+}
+
+void vBlinkTask(void *pvParameters) {
+    //you have a function for each task which is implemented as an infinite for loop
+    configASSERT(pvParameters == NULL);
+    bool on = true;
+    for (;;) {
+        writeGPIO('A', 10, on);
+        on = !on;
+        // Task is blocked(waiting) for this amount of time then replaced from start I think
+        // this task executes time taken before this line + 500 again
+        // If you want the WHOLE task to execute for just 500 ms then use vTaskDelayUntil
+        vTaskDelay(pdMS_TO_TICKS(500));
+
+    }
+}
+
+void vUartTask(void *pvParameters) {
+    configASSERT(pvParameters == NULL);
+    for (;;) {
+        writeToSerialMonitor("INSIDE TASK");
+        vTaskDelay(pdMS_TO_TICKS(500));
+        writeToSerialMonitor("Called again");//Test to see if called from start or here
+    }
+}
 
 int main(void){
+    systemInit();
+    xTaskCreate(vUartTask, "Uart", 50, NULL, 1, NULL);
+    xTaskCreate(vBlinkTask, "Blink", 50, NULL, 2, NULL);
+    vTaskStartScheduler();
+    /*
+    - the last argument is a pointer to the task datatype and you can use it in 
+    later task methods(pointer not needed here so null is passed in)
+    - stack depth is 50 here, this is depth each row(out of 50 rows) is 4 bytes here(this is port specific and dependent on architecture)
+    
+    */
+    
+
+    /*
     systickInit(CLOCK_FREQ/1000);
     *RCC_IOPENR |= 1;//GPIOA, enabling done here is more concise because in function you don't exactly know which bank to enable
     setModeGPIO('A', 10, GPIO_MODE_OUTPUT);
@@ -140,13 +203,15 @@ int main(void){
             on = !on;
             count++;
         }
-        /*
+        
         - you can do other stuff here -> benefit of doing this compared to delay 
         from empty loop
         - but delay loop better for accuracy because if the code below takes a 
         considerable time the next LED blink will have to pay for it
-        */
+        
     }
     return 0;
+    */
+    
 }
 

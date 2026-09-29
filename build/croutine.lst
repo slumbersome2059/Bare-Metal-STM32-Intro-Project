@@ -1,0 +1,41 @@
+ARM GAS  /tmp/ccopLSsv.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 4
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"croutine.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Middlewares/Third_Party/FreeRTOS/Source/croutine.c"
+  18              	.Letext0:
+ARM GAS  /tmp/ccopLSsv.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 croutine.c
+                           .group:00000000 wm4.0.1a22b6a18e233ac4483d4e03a6014323
+                           .group:00000000 wm4.stddef.h.39.0dc9006b34572d4d9cae4c8b422c4971
+                           .group:00000000 wm4.stdint.h.29.6d480f4ba0f60596e88234283d42444f
+                           .group:00000000 wm4.FreeRTOSConfig.h.32.0ce6f08a23ce496327f55c352fb79fb2
+                           .group:00000000 wm4.projdefs.h.30.0702c8e11543ad65b967f8cb76fed320
+                           .group:00000000 wm4.portmacro.h.31.843369dbea38d7b2939e41be1fb06b1d
+                           .group:00000000 wm4.portable.h.61.be9f7fc94043ef4a5a9b3e0aa96123ec
+                           .group:00000000 wm4.mpu_wrappers.h.30.2bb66a1a6b51d1b3041641542d3e6c66
+                           .group:00000000 wm4.portable.h.187.30f79afec3fd80e5ecc03308b5b7a82e
+                           .group:00000000 wm4.FreeRTOS.h.69.ef4231dbc21c19467c5dad60410d71fc
+                           .group:00000000 wm4.list.h.59.331af9c13784c3bf1b9fce5389c35037
+                           .group:00000000 wm4.task.h.56.1d19fc4e1b188ff758d8adc55348144a
+                           .group:00000000 wm4.croutine.h.30.ece76c558af804dbbafc4ebcb49ed603
+
+NO UNDEFINED SYMBOLS
