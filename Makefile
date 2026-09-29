@@ -102,6 +102,7 @@ AS_INCLUDES =  \
 # C includes
 C_INCLUDES =  \
 -ICore/Inc \
+-ICore/Src \
 -IMiddlewares/Third_Party/FreeRTOS/Source/include/ \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/ \
 -IMiddlewares/Third_Party/CMSIS/RTOS2/Include/ \

@@ -715,6 +715,7 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB ) PRIVILEGED_FUNCTION;
 
 #endif /* portUSING_MPU_WRAPPERS */
 /*-----------------------------------------------------------*/
+extern void uint_to_str(uint16_t val, char *str);
 
 #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
@@ -761,12 +762,15 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB ) PRIVILEGED_FUNCTION;
 
             /* Allocate space for the stack used by the task being created. */
             pxStack = pvPortMallocStack( ( ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ) ); /*lint !e9079 All values returned by pvPortMalloc() have at least the alignment required by the MCU's stack and this allocation is the stack. */
-
+            char msg[10];
+            uint_to_str((uint16_t)(( ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) )), msg);
+            
             if( pxStack != NULL )
             {
                 /* Allocate space for the TCB. */
                 pxNewTCB = ( TCB_t * ) pvPortMalloc( sizeof( TCB_t ) ); /*lint !e9087 !e9079 All values returned by pvPortMalloc() have at least the alignment required by the MCU's stack, and the first member of TCB_t is always a pointer to the task's stack. */
-
+    
+                
                 if( pxNewTCB != NULL )
                 {
                     memset( ( void * ) pxNewTCB, 0x00, sizeof( TCB_t ) );
@@ -1334,6 +1338,7 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
         }
         else
         {
+
             mtCOVERAGE_TEST_MARKER();
         }
     }
@@ -1951,8 +1956,11 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
 #endif /* ( ( INCLUDE_xTaskResumeFromISR == 1 ) && ( INCLUDE_vTaskSuspend == 1 ) ) */
 /*-----------------------------------------------------------*/
 
+
+
 void vTaskStartScheduler( void )
 {
+    
     BaseType_t xReturn;
 
     /* Add the idle task at the lowest priority. */
@@ -1991,7 +1999,8 @@ void vTaskStartScheduler( void )
                                ( void * ) NULL,
                                portPRIVILEGE_BIT,  /* In effect ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), but tskIDLE_PRIORITY is zero. */
                                &xIdleTaskHandle ); /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
-    }
+        
+                            }
     #endif /* configSUPPORT_STATIC_ALLOCATION */
 
     #if ( configUSE_TIMERS == 1 )
@@ -2006,12 +2015,14 @@ void vTaskStartScheduler( void )
         }
     }
     #endif /* configUSE_TIMERS */
+    
 
     if( xReturn == pdPASS )
     {
         /* freertos_tasks_c_additions_init() should only be called if the user
          * definable macro FREERTOS_TASKS_C_ADDITIONS_INIT() is defined, as that is
          * the only macro called by the function. */
+        
         #ifdef FREERTOS_TASKS_C_ADDITIONS_INIT
         {
             freertos_tasks_c_additions_init();
@@ -2024,6 +2035,7 @@ void vTaskStartScheduler( void )
          * so interrupts will automatically get re-enabled when the first task
          * starts to run. */
         portDISABLE_INTERRUPTS();
+        
 
         #if ( ( configUSE_NEWLIB_REENTRANT == 1 ) || ( configUSE_C_RUNTIME_TLS_SUPPORT == 1 ) )
         {
@@ -2044,12 +2056,14 @@ void vTaskStartScheduler( void )
          * have portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() defined in your
          * FreeRTOSConfig.h file. */
         portCONFIGURE_TIMER_FOR_RUN_TIME_STATS();
+        
 
         traceTASK_SWITCHED_IN();
-
+        
         /* Setting up the timer tick is hardware specific and thus in the
          * portable interface. */
         xPortStartScheduler();
+        
 
         /* In most cases, xPortStartScheduler() will not return. If it
          * returns pdTRUE then there was not enough heap memory available
@@ -2063,7 +2077,9 @@ void vTaskStartScheduler( void )
         /* This line will only be reached if the kernel could not be started,
          * because there was not enough FreeRTOS heap to create the idle task
          * or the timer task. */
-        configASSERT( xReturn != errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY );
+        
+         configASSERT( xReturn != errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY );
+        
     }
 
     /* Prevent compiler warnings if INCLUDE_xTaskGetIdleTaskHandle is set to 0,

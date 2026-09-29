@@ -1,6 +1,7 @@
 //This is the hardware abstraction layer, it gives structures which can be used to access the memory to which registers are mapped to
 //It also usually includes functions to interact with hardware
 #include <stdint.h>
+#include <stdbool.h>
 #define RCC_BASE 0x40021000
 #define ADC1_BASE 0x40012400
 //GPIO code

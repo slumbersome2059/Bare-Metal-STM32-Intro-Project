@@ -138,21 +138,22 @@ void systemInit(void){
     *RCC_IOPENR |= 1;//GPIOA, enabling done here is more concise because in function you don't exactly know which bank to enable
     setModeGPIO('A', 10, GPIO_MODE_OUTPUT);
     initSerialMonitor();
-    writeToSerialMonitor("HELLO\n");
     adc_setup('A', 0);
 }
 
 void vBlinkTask(void *pvParameters) {
+    writeToSerialMonitor("INSIDE full TASK");
     //you have a function for each task which is implemented as an infinite for loop
     configASSERT(pvParameters == NULL);
     bool on = true;
     for (;;) {
         writeGPIO('A', 10, on);
         on = !on;
-        // Task is blocked(waiting) for this amount of time then replaced from start I think
-        // this task executes time taken before this line + 500 again
+        // Task is blocked(waiting) for this amount of time then replaced from same place it left off
+        // this task executes time taken to get here before this line + 500 again
         // If you want the WHOLE task to execute for just 500 ms then use vTaskDelayUntil
-        vTaskDelay(pdMS_TO_TICKS(500));
+        //writeToSerialMonitor("Done");
+        vTaskDelay(pdMS_TO_TICKS(3000));
 
     }
 }
@@ -160,9 +161,9 @@ void vBlinkTask(void *pvParameters) {
 void vUartTask(void *pvParameters) {
     configASSERT(pvParameters == NULL);
     for (;;) {
-        writeToSerialMonitor("INSIDE TASK");
-        vTaskDelay(pdMS_TO_TICKS(500));
-        writeToSerialMonitor("Called again");//Test to see if called from start or here
+        writeToSerialMonitor("INSIDE TASK\n");
+        vTaskDelay(pdMS_TO_TICKS(3000));
+        writeToSerialMonitor("Called again\n");//Test to see if called from start or here
     }
 }
 
@@ -175,7 +176,7 @@ int main(void){
     - the last argument is a pointer to the task datatype and you can use it in 
     later task methods(pointer not needed here so null is passed in)
     - stack depth is 50 here, this is depth each row(out of 50 rows) is 4 bytes here(this is port specific and dependent on architecture)
-    
+    - xTaskCreate returns pdPass or pdFail
     */
     
 
