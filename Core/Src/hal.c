@@ -284,7 +284,10 @@ void writeWordISR(){//This is an interrupt service routine
     }else{
         uart2->CR1 &= ~(1U << 7); // Disable TXEIE when queue is empty
     }
-    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);//context switch if the thing you did caused some higher priority task to unblock
+    //In an ISR the switching of tasks may not immediately happen in between ticks(it woudl in tasks)
+    //This is used to make sure you don't have to wait till end of tick to switch task
+
 }
 
 void enableInterrupt(int line){//look at programming manual docs for this, PM0223
