@@ -1,4 +1,4 @@
-ARM GAS  /tmp/cc8HI98k.s 			page 1
+ARM GAS  /tmp/ccx8lxwO.s 			page 1
 
 
    1              		.cpu cortex-m0plus
@@ -58,7 +58,7 @@ ARM GAS  /tmp/cc8HI98k.s 			page 1
   25:Core/Src/startup.c ****     difference to void is that function declared with void can go back to caller
   26:Core/Src/startup.c ****     - mainly used for optimisations like cutting out code that is written after the function call(t
   27:Core/Src/startup.c ****     */
-ARM GAS  /tmp/cc8HI98k.s 			page 2
+ARM GAS  /tmp/ccx8lxwO.s 			page 2
 
 
   28:Core/Src/startup.c ****     long* src = &(_startDataFLASH);
@@ -118,7 +118,7 @@ ARM GAS  /tmp/cc8HI98k.s 			page 1
   50:Core/Src/startup.c ****         *dst = 0;
   63              		.loc 1 50 14 view .LVU8
   64 001c 0B4B     		ldr	r3, .L9+16
-ARM GAS  /tmp/cc8HI98k.s 			page 3
+ARM GAS  /tmp/ccx8lxwO.s 			page 3
 
 
   65 001e 0C49     		ldr	r1, .L9+20
@@ -178,27 +178,54 @@ ARM GAS  /tmp/cc8HI98k.s 			page 1
  118 0034 00000000 		.word	0
  119 0038 00000000 		.word	xPortPendSVHandler
  120 003c 00000000 		.word	xPortSysTickHandler
-ARM GAS  /tmp/cc8HI98k.s 			page 4
+ARM GAS  /tmp/ccx8lxwO.s 			page 4
 
 
- 121 0040 00000000 		.space	128
- 121      00000000 
- 121      00000000 
- 121      00000000 
- 121      00000000 
- 122              		.text
- 123              	.Letext0:
- 124              		.file 2 "<built-in>"
-ARM GAS  /tmp/cc8HI98k.s 			page 5
+ 121 0040 00000000 		.word	0
+ 122 0044 00000000 		.word	0
+ 123 0048 00000000 		.word	0
+ 124 004c 00000000 		.word	0
+ 125 0050 00000000 		.word	0
+ 126 0054 00000000 		.word	0
+ 127 0058 00000000 		.word	0
+ 128 005c 00000000 		.word	0
+ 129 0060 00000000 		.word	0
+ 130 0064 00000000 		.word	0
+ 131 0068 00000000 		.word	0
+ 132 006c 00000000 		.word	0
+ 133 0070 00000000 		.word	0
+ 134 0074 00000000 		.word	0
+ 135 0078 00000000 		.word	0
+ 136 007c 00000000 		.word	0
+ 137 0080 00000000 		.word	0
+ 138 0084 00000000 		.word	0
+ 139 0088 00000000 		.word	0
+ 140 008c 00000000 		.word	0
+ 141 0090 00000000 		.word	0
+ 142 0094 00000000 		.word	0
+ 143 0098 00000000 		.word	0
+ 144 009c 00000000 		.word	0
+ 145 00a0 00000000 		.word	0
+ 146 00a4 00000000 		.word	0
+ 147 00a8 00000000 		.word	0
+ 148 00ac 00000000 		.word	0
+ 149 00b0 00000000 		.word	writeWordISR
+ 150 00b4 00000000 		.word	0
+ 151 00b8 00000000 		.word	0
+ 152 00bc 00000000 		.word	0
+ 153              		.text
+ 154              	.Letext0:
+ 155              		.file 2 "<built-in>"
+ARM GAS  /tmp/ccx8lxwO.s 			page 5
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 startup.c
-     /tmp/cc8HI98k.s:19     .text._reset:00000000 $t
-     /tmp/cc8HI98k.s:25     .text._reset:00000000 _reset
-     /tmp/cc8HI98k.s:89     .text._reset:0000003c $d
-     /tmp/cc8HI98k.s:104    .vectors:00000000 tab
-     /tmp/cc8HI98k.s:101    .vectors:00000000 $d
+     /tmp/ccx8lxwO.s:19     .text._reset:00000000 $t
+     /tmp/ccx8lxwO.s:25     .text._reset:00000000 _reset
+     /tmp/ccx8lxwO.s:89     .text._reset:0000003c $d
+     /tmp/ccx8lxwO.s:104    .vectors:00000000 tab
+     /tmp/ccx8lxwO.s:101    .vectors:00000000 $d
                            .group:00000000 wm4.0.1a22b6a18e233ac4483d4e03a6014323
 
 UNDEFINED SYMBOLS
@@ -214,3 +241,4 @@ _estack
 vPortSVCHandler
 xPortPendSVHandler
 xPortSysTickHandler
+writeWordISR

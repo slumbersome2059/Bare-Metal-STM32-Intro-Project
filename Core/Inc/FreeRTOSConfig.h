@@ -79,6 +79,8 @@ extern void systickHandler(void);
 #define configMAX_PRIORITIES                     ( 56 )
 #define configMINIMAL_STACK_SIZE                 ((uint16_t)128)
 #define configTOTAL_HEAP_SIZE                    ((size_t)6*1024)
+//RTOS objects, such as tasks, queues, semaphores and software timers need RAM from the heap space
+//By default they are allocated dynamically and not statically
 #define configSTACK_ALLOCATION_FROM_SEPARATE_HEAP 0
 #define configMAX_TASK_NAME_LEN                  ( 16 )
 #define configGENERATE_RUN_TIME_STATS            0

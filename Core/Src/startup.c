@@ -60,8 +60,13 @@ extern void systickHandler(void);
 extern void vPortSVCHandler( void );
 extern void xPortPendSVHandler( void );
 extern void xPortSysTickHandler( void );
-
-__attribute__((used, section(".vectors"))) void (* const tab[16+32])(void) = {_estack, _reset, 0, 0, 0, 0, 0, 0, 0, 0, 0, vPortSVCHandler, 0, 0, xPortPendSVHandler, xPortSysTickHandler};
+extern void writeWordISR( void );
+__attribute__((used, section(".vectors"))) void (* const tab[16+32])(void) = 
+    {_estack, _reset, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    vPortSVCHandler, 0, 0, xPortPendSVHandler, xPortSysTickHandler, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, writeWordISR, 0, 0, 0};
 //only first two handlers defined rest are zeroed
 //Every handler is a handler for a hardware interrupt, apart from the first two -> second one is the code which starts bootup and first is the initial stack pointer
 //So this table is also read at the start for bootup

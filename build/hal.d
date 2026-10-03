@@ -1,4 +1,4 @@
-build/main.o: Core/Src/main.c Core/Inc/hal.h \
+build/hal.o: Core/Src/hal.c Core/Inc/hal.h \
  Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
  Core/Inc/FreeRTOSConfig.h \
  Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \

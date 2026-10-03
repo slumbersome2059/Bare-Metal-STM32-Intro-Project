@@ -38,6 +38,7 @@ BUILD_DIR = build
 C_SOURCES =  \
 Core/Src/main.c \
 Core/Src/startup.c \
+Core/Src/hal.c \
 Middlewares/Third_Party/FreeRTOS/Source/croutine.c \
 Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \
 Middlewares/Third_Party/FreeRTOS/Source/list.c \
@@ -102,7 +103,6 @@ AS_INCLUDES =  \
 # C includes
 C_INCLUDES =  \
 -ICore/Inc \
--ICore/Src \
 -IMiddlewares/Third_Party/FreeRTOS/Source/include/ \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/ \
 -IMiddlewares/Third_Party/CMSIS/RTOS2/Include/ \

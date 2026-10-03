@@ -1,41 +1,12 @@
-//This is the hardware abstraction layer, it gives structures which can be used to access the memory to which registers are mapped to
-//It also usually includes functions to interact with hardware
-#include <stdint.h>
-#include <stdbool.h>
+#include "hal.h"
+
 #define RCC_BASE 0x40021000
 #define ADC1_BASE 0x40012400
-//GPIO code
-struct GPIO{
-    volatile uint32_t MODER, OTYPER, OSPEEDR, PUPDR, IDR, ODR, BSRR, LCKR, AFRL, AFRH;
-};
-
-struct SYS_TICK{
-    volatile uint32_t SYST_CSR, SYST_RVR, SYST_CVR, SYST_CALIB;  
-};
-
-struct UART{
-    volatile uint32_t CR1, CR2, CR3, BRR, GTPR, RTQR, RQR, ISR, ICR, RDR, TDR, PRESC;
-    /*
-    - BRR -> set the baud rate, for UART and USART this is the amount of data transmitted per second
-    - GTPR -> sets the guard time value(transmission complete flag set after this 
-    time is drained), and sets prescaler value which divides system clock -> both these values are only
-     accessed in certain modes and not in normal mode
-    - RTOR -> receiver timeout register, sets a flag after some time 
-    where nothing is to be read
-    - RQR -> used to make requests like discard data without reading it, or put USART in mute mode
-    - ISR -> gives information on the status of the USART like a busy flag if there is comms on the RX line, or RX stack is full
-    - ICR -> clears flags of ISR, same idea of BSRR used for ODR
-    - RDR -> contains data character received
-    - TDR -> contains data character to be transmitted
-    - PRESC -> used to divide the input clock by some number 
-    */
-};
-
+/* System clock frequency used by the FreeRTOS port. */
+uint32_t SystemCoreClock = 48000000UL;
 
 //These describe different registers in the MCU which allow you to enable different peripherals
 //They allow clock management and allow you to reset parts of the circuit
-
-
 //By configuring registers in the MCU you can enable GPIO banks
 //To save power in STM32 all peripherals are turned off but not the case in most other MCUs
 volatile uint32_t* RCC_IOPENR = (volatile uint32_t*)(RCC_BASE + 0x34) ;//enables clock to GPIO banks
@@ -43,19 +14,6 @@ volatile uint32_t* RCC_IOPENR = (volatile uint32_t*)(RCC_BASE + 0x34) ;//enables
 //This gives a clock source to components    
 volatile uint32_t* RCC_APBENR1 = (volatile uint32_t*)(RCC_BASE + 0x3C) ;
 volatile uint32_t* RCC_APBENR2 = (volatile uint32_t*)(RCC_BASE + 0x40) ;
-
-typedef struct ADC ADC;
-typedef struct GPIO GPIO;
-typedef struct SYS_TICK SYS_TICK;
-typedef struct UART UART;
-typedef enum {
-    GPIO_MODE_INPUT,//you will be reading from these registers
-    GPIO_MODE_OUTPUT, 
-    GPIO_MODE_AF,//this maps the pin as input for or output of(whether I or O depends on AF number and the pin) some other peripheral like USART, SPI, ...
-    GPIO_MODE_ANALOG//you just use the actual analog value of the GPIO pin rather than interpreting it a binary value
-    //you could sample the value and take it as input for ADC
-} GPIO_mode;
-SYS_TICK* const SYS_TICKp = (SYS_TICK* const)0xE000E010;
 
 
 volatile uint32_t* ADC1_ISR = ((volatile uint32_t*)(ADC1_BASE + 0x00));
@@ -67,7 +25,11 @@ volatile uint32_t* ADC1_DR = ((volatile uint32_t*)(ADC1_BASE + 0x40));
 volatile uint32_t* ADC1_CCR = ((volatile uint32_t*)(ADC1_BASE + 0x308));
 volatile uint32_t* ADC1_CALFACT = ((volatile uint32_t*)(ADC1_BASE + 0xB4));
 
-static inline int powInt(int base, int exp){
+volatile uint32_t* NVIC_ISER = ((volatile uint32_t*)(0xE000E100));
+
+SYS_TICK* const SYS_TICKp = (SYS_TICK* const)0xE000E010;
+
+int powInt(int base, int exp){
     int ans = 1;
     while(exp){
         ans *= base;
@@ -80,7 +42,7 @@ static inline int powInt(int base, int exp){
 I think this should not have been made into a function, code like 5*2 will now have to be executed
 and pow will be executed so it would have been more efficient to just call the normal code.
 */
-static inline void setReg(volatile uint32_t* reg, int index, int stride, int val){
+void setReg(volatile uint32_t* reg, int index, int stride, int val){
     /*
     Sets bits on a register to 1 or 0.
     */
@@ -89,21 +51,21 @@ static inline void setReg(volatile uint32_t* reg, int index, int stride, int val
     *reg |= (uint32_t)(((val)&(oneMask)) << (index*stride));
 }
 
-inline GPIO *getGPIO(char bank){
+GPIO *getGPIO(char bank){
     //GPIO *gpioPins[GPIO_BANK_NUMBER] = {0, 0, 0, 0, 0};
     int base = 0x50000000;
     int offset = 0x400;
     int i = bank - 'A';
     return (GPIO *)(base + i*(offset));
 } 
-static inline void setModeGPIO(char bank, int pinNum, GPIO_mode gM){
+void setModeGPIO(char bank, int pinNum, GPIO_mode gM){
     GPIO *gpioBank = getGPIO(bank);
     //pin numbers start from 0 so you can have A0 and mode for pin number stored as two bits in pinNum*2 and pinNum* + 1
     setReg(&(gpioBank->MODER), pinNum, 2, gM);
     //U is added after 3 to make it unsigned to avoid any strange errors that may happen
 }
 
-static inline void setAltFuncGPIO(char bank, int pinNum, int afNum){
+void setAltFuncGPIO(char bank, int pinNum, int afNum){
     GPIO *gpioBank = getGPIO(bank);
     if(pinNum <= 7){
         setReg(&(gpioBank->AFRL), pinNum, 4, afNum);
@@ -113,7 +75,7 @@ static inline void setAltFuncGPIO(char bank, int pinNum, int afNum){
     
 }
 
-static inline void writeGPIO(char bank, int pinNum, int val){
+void writeGPIO(char bank, int pinNum, int val){
     GPIO *gpioBank = getGPIO(bank);
     gpioBank->BSRR = (1U << (pinNum+(val ? 0: 16)));
 }
@@ -262,4 +224,80 @@ uint16_t analog_read(){
     
     //Because we use single mode conversions only start after ADSTART is set
     return adc_value;
+}
+
+//Only uart1 and uart2 have RX and TX ports mapped to GPIO pins on stm32c031c6 
+UART* const uart2 = (UART*)0x40004400;
+
+void delay(int N){
+    while(N--){
+        asm("nop");
+    }
+}
+
+void initSerialMonitor(){
+    //Setting up GPIO pins
+    setModeGPIO('A', 2, GPIO_MODE_AF);
+    setModeGPIO('A', 3, GPIO_MODE_AF);
+    setAltFuncGPIO('A', 2, 1);
+    setAltFuncGPIO('A', 3, 1);
+    //Enabling USART peripheral
+    *RCC_APBENR1 |= (1 << 17); //you are only changing one bit so no need to zero things out(would be necessary for storing eg 01)
+    (void)*RCC_APBENR1; // Dummy read forces CPU to wait for clock stabilization
+    uart2->CR1 = 0;//UART(from setting UE bit to 0) needs to be disabled for some bits to be set
+    uart2->BRR = (uint32_t)(SystemCoreClock/115200);
+    uart2->CR1 = 13;
+}
+
+void writeToSerialMonitor(char* msg){
+    while(*msg != 0){
+        uart2->TDR = (uint8_t)(*msg);
+        msg++;
+        while((uart2->ISR & (1 << 7)) == 0){
+            /*
+            This is TXE bit which is used to show TDR is free and the data in there has 
+            been moved to shift register so you can write there
+            There is a TC bit which shows the whole transmission is complete so shift register is empty 
+            and TX line is IDLE. This is used right at the end so that you don't disable 
+            the USART when there is data in shift register for example. But TC does not seem to work
+            on STM32 on Wokwi when I use it here. For example, using TC should mean loop runs longer but no 
+            change in output while only first letter gets printed in reality.
+            */
+            delay(1);
+        };
+    }    
+}
+
+//extern UBaseType_t uxQueueMessagesWaitingFromISR(const QueueHandle_t xQueue);
+//extern BaseType_t xQueueReceiveFromISR(QueueHandle_t xQueue, void *const pvBuffer, BaseType_t *const pxHigherPriorityTaskWoken);
+extern QueueHandle_t systQueue;
+void writeWordISR(){//This is an interrupt service routine
+    //When using NVIC peripheral interrupts you will usually need to clear the pending interrupt
+    //Whenever the interrupt signal is asserted the interrupt is pending, and you can control it's state with some registers
+    //Here we will automatically clear the interrupt by writing to TXE so doing it twice could result in problems
+    //writeToSerialMonitor("DS\n");
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    if(uxQueueMessagesWaitingFromISR(systQueue)){
+        char s = '0';
+        xQueueReceiveFromISR(systQueue, &s,&xHigherPriorityTaskWoken);        
+        uart2->TDR = (uint8_t)(s);
+    }else{
+        uart2->CR1 &= ~(1U << 7); // Disable TXEIE when queue is empty
+    }
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+}
+
+void enableInterrupt(int line){//look at programming manual docs for this, PM0223
+    *NVIC_ISER = (1 << line); //this is just a reg to enable an interrupt, other register for clearing, 0 has no effect
+    //you seem to need to do this only for the peripheral interrupts and not the core interrupts(you don't seem to have to do any kind of management for these)
+}
+
+void setTXEInterruptsUSART(){
+    uart2->CR1 |= (1 << 7);//Enables TXEIE which will give you an interrupt whenever TXE is ON
+    //Initially even when TXE is 0, it seems like there is an interrupt when you enable TXEIE
+    //The code after the enabling only executes after the first byte has been written to UART 
+}
+
+void enable_gpio_clock(){
+    *RCC_IOPENR |= 1;//GPIOA, enabling done here is more concise because in function you don't exactly know which bank to enable
 }

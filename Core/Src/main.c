@@ -4,67 +4,24 @@
 #include "hal.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
 
-/* System clock frequency used by the FreeRTOS port. */
-uint32_t SystemCoreClock = 48000000UL;
-
-#define USARTDIV 48000000/115200
+#define MAX_NUMBER_LENGTH 6
+#define QUEUE_NUMBER_LENGTH 10
+#define UART_PERIP_INTERRUPT_LINE 28
 const int GPIO_BANK_NUMBER = 5;
-const int CLOCK_FREQ = 48000000;
 
-
-//Only uart1 and uart2 have RX and TX ports mapped to GPIO pins on stm32c031c6 
-UART* const uart1 = (UART*)0x40013800;
-UART* const uart2 = (UART*)0x40004400;
-UART* const uart3 = (UART*)0x40004800;
-UART* const uart4 = (UART*)0x40004C00;
+QueueHandle_t systQueue;
+TaskHandle_t uartTask;
+TaskHandle_t blinkTask;
 
 
 static volatile uint32_t s_ticks = 0; 
 void systickHandler(){
+    
     s_ticks++;
 }
 
-
-
-void delay(int N){
-    while(N--){
-        asm("nop");
-    }
-}
-
-void initSerialMonitor(){
-    //Setting up GPIO pins
-    setModeGPIO('A', 2, GPIO_MODE_AF);
-    setModeGPIO('A', 3, GPIO_MODE_AF);
-    setAltFuncGPIO('A', 2, 1);
-    setAltFuncGPIO('A', 3, 1);
-    //Enabling USART peripheral
-    *RCC_APBENR1 |= (1 << 17); //you are only changing one bit so no need to zero things out(would be necessary for storing eg 01)
-    (void)*RCC_APBENR1; // Dummy read forces CPU to wait for clock stabilization
-    uart2->CR1 = 0;//UART(from setting UE bit to 0) needs to be disabled for some bits to be set
-    uart2->BRR = (uint32_t)(48000000/115200);
-    uart2->CR1 = 13;
-}
-
-void writeToSerialMonitor(char* msg){
-    while(*msg != 0){
-        uart2->TDR = (uint8_t)(*msg);
-        msg++;
-        while((uart2->ISR & (1 << 7)) == 0){
-            /*
-            This is TXE bit which is used to show TDR is free and the data in there has 
-            been moved to shift register so you can write there
-            There is a TC bit which shows the whole transmission is complete so shift register is empty 
-            and TX line is IDLE. This is used right at the end so that you don't disable 
-            the USART when there is data in shift register for example. But TC does not seem to work
-             on STM32 when I use it here. For example, using TC should mean loop runs longer but no 
-             change in output while only first letter gets printed in reality.
-            */
-            delay(1);
-        };
-    }    
-}
 
 void print_reg_vals(uint32_t reg_vals){
     writeToSerialMonitor("\n");
@@ -134,50 +91,82 @@ void uint_to_str(uint16_t val, char *str) {
     str[idx] = '\0';
 }
 void systemInit(void){
-    systickInit(CLOCK_FREQ/1000);
-    *RCC_IOPENR |= 1;//GPIOA, enabling done here is more concise because in function you don't exactly know which bank to enable
+    systickInit(((int)SystemCoreClock)/1000);
+
+    enable_gpio_clock();
     setModeGPIO('A', 10, GPIO_MODE_OUTPUT);
     initSerialMonitor();
     adc_setup('A', 0);
+    enableInterrupt(UART_PERIP_INTERRUPT_LINE);
+    systQueue = xQueueCreate(QUEUE_NUMBER_LENGTH*MAX_NUMBER_LENGTH, sizeof(char));
 }
 
+enum map_task_notif_blink {ITEM_ADDED};
 void vBlinkTask(void *pvParameters) {
-    writeToSerialMonitor("INSIDE full TASK");
     //you have a function for each task which is implemented as an infinite for loop
     configASSERT(pvParameters == NULL);
-    bool on = true;
     for (;;) {
-        writeGPIO('A', 10, on);
-        on = !on;
+        ulTaskNotifyTakeIndexed(ITEM_ADDED, pdTRUE, portMAX_DELAY);
+        //writeToSerialMonitor("B\n");
+        writeGPIO('A', 10, true);
+        vTaskDelay(pdMS_TO_TICKS(10));
+        writeGPIO('A', 10, false);
         // Task is blocked(waiting) for this amount of time then replaced from same place it left off
         // this task executes time taken to get here before this line + 500 again
         // If you want the WHOLE task to execute for just 500 ms then use vTaskDelayUntil
         //writeToSerialMonitor("Done");
-        vTaskDelay(pdMS_TO_TICKS(3000));
+        
 
     }
 }
 
+enum map_task_notif_uart {ADDED_FROM_EMPTY};
 void vUartTask(void *pvParameters) {
     configASSERT(pvParameters == NULL);
     for (;;) {
-        writeToSerialMonitor("INSIDE TASK\n");
-        vTaskDelay(pdMS_TO_TICKS(3000));
-        writeToSerialMonitor("Called again\n");//Test to see if called from start or here
+        //I couldn't find a way to make this task block on when the queue is empty so I had to use notifications or peek
+        //I could have used notification but I think in terms of memory it would have been more inefficient
+        ulTaskNotifyTakeIndexed(ADDED_FROM_EMPTY, pdTRUE, portMAX_DELAY);
+        //writeToSerialMonitor("U\n");
+        setTXEInterruptsUSART();
+    }
+}
+
+void vTempSensorTask(void *pvParameters) {
+    configASSERT(pvParameters == NULL);
+    
+    for (;;) {
+        uint16_t v = analog_read();
+        char strV[MAX_NUMBER_LENGTH];
+        uint_to_str(v, strV);
+        int i = 0;
+        UBaseType_t messagesStart = uxQueueMessagesWaiting(systQueue);
+        while(strV[i]){
+            xQueueSendToBack(systQueue, &(strV[i]), portMAX_DELAY);
+            i++;
+        }
+        char newLine = '\n';
+        xQueueSendToBack(systQueue, &newLine, portMAX_DELAY);
+        if(messagesStart == 0){//if queue is not empty eventually the uart task will process it away, this task may interrupt uart because it has higher priority
+            xTaskNotifyGiveIndexed(uartTask, ADDED_FROM_EMPTY);    
+        }
+        xTaskNotifyGiveIndexed(blinkTask, ITEM_ADDED);
+        vTaskDelay(pdMS_TO_TICKS(500));
     }
 }
 
 int main(void){
     systemInit();
-    xTaskCreate(vUartTask, "Uart", 50, NULL, 1, NULL);
-    xTaskCreate(vBlinkTask, "Blink", 50, NULL, 2, NULL);
-    vTaskStartScheduler();
+    xTaskCreate(vTempSensorTask, "TempSensor", 50, NULL, 3, NULL);
     /*
     - the last argument is a pointer to the task datatype and you can use it in 
     later task methods(pointer not needed here so null is passed in)
     - stack depth is 50 here, this is depth each row(out of 50 rows) is 4 bytes here(this is port specific and dependent on architecture)
     - xTaskCreate returns pdPass or pdFail
     */
+    xTaskCreate(vUartTask, "Uart", 50, NULL, 1,  &uartTask);
+    xTaskCreate(vBlinkTask, "Blink", 50, NULL, 2, &blinkTask);
+    vTaskStartScheduler();
     
 
     /*

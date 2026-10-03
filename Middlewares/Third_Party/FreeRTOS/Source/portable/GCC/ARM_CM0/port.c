@@ -229,7 +229,6 @@ void vPortStartFirstTask( void )
 /*
  * See header file for description.
  */
-extern void writeToSerialMonitor(char* msg);
 BaseType_t xPortStartScheduler( void )
 {
     /* Make PendSV, CallSV and SysTick the same priority as the kernel. */
@@ -242,7 +241,6 @@ BaseType_t xPortStartScheduler( void )
 
     /* Initialise the critical nesting count ready for the first task. */
     uxCriticalNesting = 0;
-    writeToSerialMonitor("\nInt Entered\n");
 
     /* Start the first task. */
     vPortStartFirstTask();
