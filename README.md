@@ -7,6 +7,7 @@ This repository is for a project where data is read from analog temperature sens
 - UART
 - SYSTICK
 - GPIO
+- ADC
 - FreeRTOS
 - Using interrupts and interrupt handlers
 ## Running the project
